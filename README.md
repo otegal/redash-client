@@ -12,7 +12,7 @@ cf. https://redash.io/help/open-source/dev-guide/docker
 7. setup initial profile.
 8. create PostgreSQL Data Source. refer redash/docker-compose.yml
 9. create first query. `ex) SELECT * FROM users;`
-
+10. set `.env` (detail is WIP).
 
 if you want to permanent redash db, add `volumes` in `redash/docker-compose.yml`.
 ```Dockerfile

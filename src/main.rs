@@ -1,7 +1,5 @@
 use serde::{Deserialize, Serialize};
 
-const REDASH_USERS_QUERY_RESULT_URL: &str = "put your redash endpoint with api key params";
-
 #[derive(Serialize, Deserialize, Debug)]
 struct RootQueryResult {
     query_result: QueryResult,
@@ -54,7 +52,8 @@ struct Detail {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let resp = reqwest::get(REDASH_USERS_QUERY_RESULT_URL)
+    let redash_users_query_result_url: String = dotenv::var("USERS_QUERY_RESULT_URL").unwrap();
+    let resp = reqwest::get(redash_users_query_result_url)
         .await?
         .json::<RootQueryResult>()
         .await?;
