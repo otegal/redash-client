@@ -51,12 +51,21 @@ struct Detail {
 }
 
 pub async fn fetch_query_result() -> Result<(), Box<dyn std::error::Error>> {
-    let redash_users_query_result_url: String = dotenv::var("USERS_QUERY_RESULT_URL").unwrap();
-    let resp = reqwest::get(redash_users_query_result_url)
+    let client = reqwest::Client::builder().build()?;
+
+    let resp = client
+        .get(dotenv::var("USERS_QUERY_RESULT_URL").unwrap())
+        .header(
+            reqwest::header::AUTHORIZATION,
+            dotenv::var("USER_API_KEY").unwrap(),
+        )
+        .send()
         .await?
         .json::<RootQueryResult>()
         .await?;
+
     println!("{:?}", resp);
     println!("query_result.id is {:?}", resp.query_result.id);
+
     Ok(())
 }
