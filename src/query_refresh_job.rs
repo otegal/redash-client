@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
-struct RootQueryRefresh {
+struct RootQueryRefreshJob {
     job: Job,
 }
 
@@ -14,19 +14,19 @@ struct Job {
     updated_at: i64,
 }
 
-pub async fn call_query_refresh() -> Result<String, Box<dyn std::error::Error>> {
+pub async fn fetch_query_refresh_job(job_id: &str) -> Result<(), Box<dyn std::error::Error>> {
     let client = reqwest::Client::builder().build()?;
     let resp = client
-        .post(dotenv::var("USERS_QUERY_REFRESH_URL").unwrap())
+        .get(dotenv::var("USERS_QUERY_REFRESH_JOB_URL").unwrap() + job_id)
         .header(
             reqwest::header::AUTHORIZATION,
             dotenv::var("USER_API_KEY").unwrap(),
         )
         .send()
         .await?
-        .json::<RootQueryRefresh>()
+        .json::<RootQueryRefreshJob>()
         .await?;
     println!("{:?}", resp);
 
-    Ok(resp.job.id)
+    Ok(())
 }
